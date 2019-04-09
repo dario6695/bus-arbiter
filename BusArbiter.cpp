@@ -1,6 +1,66 @@
 #include "BusArbiter.h"
 using namespace std;
 
+bool
+BusArbiter::
+isMessageFrom(message* m, const char src[])
+{
+    return strcmp(m->source, src) == 0;
+}
+
+event*
+BusArbiter::
+notify(message* m)
+{
+    //error handling
+    if (m == NULL)
+    {
+        cerr << "NULL message in notify()" << endl;
+        return NULL;
+    }
+        
+    //ignore messages whose destination is not BUS_ARBITER_GROUP
+    if (strcmp(m->dest, BUS_ARBITER_GROUP) != 0)
+        return NULL;
+    
+    switch (state)
+    {
+        case IDLE:
+            if (isMessageFrom(m, CACHE_GROUP))
+            {
+                /*TODO:
+                if is load operation
+                    call onLoadOperation(), i.e. start querying caches
+                else if is store operation
+                    call onStoreOperation(), i.e. propagate to main memory*/
+                ;
+            }
+            break;
+            
+        case QUERYING_CACHES:
+                /*TODO:
+                count number of hits in other caches
+                if # of hits is 0
+                    propagate to main memory
+                else if # of hits is 1
+                    read from cache
+                else if # of hit is 2 or more
+                    propagate to main memory
+                */
+            break;
+            
+        case WAITING_CACHE_ACK:
+            if (isMessageFrom(m, CACHE_GROUP))
+                onAckFromCache();
+            break;
+            
+        case WAITING_MEMORY_ACK:
+            if (isMessageFrom(m, MAIN_MEMORY_GROUP))
+                onAckFromMemory();
+            break;
+    }
+}
+
 BusArbiter::
 BusArbiter()
 {
@@ -12,31 +72,31 @@ void
 BusArbiter::
 onLoadOperation()
 {
+    //TODO: call function to start querying caches
     state = QUERYING_CACHES;
-    //TODO: start querying caches
 }
 
 void
 BusArbiter::
 onStoreOperation()
 {
+    //TODO: call function to propagate write operation to main memory
     state = WAITING_MEMORY_ACK;
-    //TODO: propagate write operation to main memory
 }
 
 void
 BusArbiter::
 onAckFromCache()
 {
+    //TODO: call function to transfer data to cache
     state = IDLE;
-    //TODO: transfer data to cache
 }
 
 void
 BusArbiter::
 onAckFromMemory()
 {
+    //TODO: call function to transfer data to cache
     state = IDLE;
-    //TODO: transfer data to cache
 }
 

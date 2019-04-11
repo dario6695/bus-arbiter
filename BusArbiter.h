@@ -1,4 +1,4 @@
-#include "./event/module.h"
+#include "./orchestrator/module.h"
 
 #include <iostream>
 #include <cstring>
@@ -34,8 +34,8 @@ class BusArbiter : public module
     bool isMessageFrom(message* m, const char src[]);
     
 public:
-    BusArbiter();
+    BusArbiter(string name, int priority = 0);
     
-    event* notify(message* m);
+    void onNotify(message* m);
 };
 

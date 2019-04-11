@@ -8,20 +8,20 @@ isMessageFrom(message* m, const char src[])
     return strcmp(m->source, src) == 0;
 }
 
-event*
+void
 BusArbiter::
-notify(message* m)
+onNotify(message* m)
 {
     //error handling
     if (m == NULL)
     {
         cerr << "NULL message in notify()" << endl;
-        return NULL;
+        return;
     }
         
     //ignore messages whose destination is not BUS_ARBITER_GROUP
     if (strcmp(m->dest, BUS_ARBITER_GROUP) != 0)
-        return NULL;
+        return;
     
     switch (state)
     {
@@ -62,7 +62,7 @@ notify(message* m)
 }
 
 BusArbiter::
-BusArbiter()
+BusArbiter(string name, int priority) : module(name, priority)
 {
     //TODO: should take a set of CPUs and a reference to main memory
     state = IDLE;

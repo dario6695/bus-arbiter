@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cstring>
 
-#define BUS_ARBITER_GROUP "bus-arbit"
 #define MAIN_MEMORY_GROUP "ram"
 #define CACHE_GROUP "cache"
 

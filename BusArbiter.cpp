@@ -20,7 +20,7 @@ onNotify(message* m)
     }
         
     //ignore messages whose destination is not BUS_ARBITER_GROUP
-    if (strcmp(m->dest, BUS_ARBITER_GROUP) != 0)
+    if (strcmp(m->dest, getName().c_str()) != 0)
         return;
     
     switch (state)
